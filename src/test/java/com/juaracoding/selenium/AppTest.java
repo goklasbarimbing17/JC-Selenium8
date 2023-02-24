@@ -5,6 +5,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -15,11 +16,12 @@ import java.util.concurrent.TimeUnit;
 public class AppTest {
 
     WebDriver driver;
+    JavascriptExecutor js;
     @BeforeMethod
     public void setUp(){
         System.setProperty("webdriver.chrome.driver", "D:\\Software Testing\\chromedriver.exe");
         driver = new ChromeDriver();
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js = (JavascriptExecutor) driver;
         //driver.get("http://google.com");
         driver.get("https://demoqa.com/text-box");
         driver.manage().window().maximize();
@@ -27,8 +29,7 @@ public class AppTest {
     }
 
     @Test
-    public void inputTest(){
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+    public void testFormIdentity(){
         driver.findElement(By.id("userName")).sendKeys("juaracoding");
         driver.findElement(By.id("userEmail")).sendKeys("juaracoding@gmail.co.id");
         driver.findElement(By.id("currentAddress")).sendKeys("Jl.juaracoding");
@@ -37,6 +38,18 @@ public class AppTest {
         //scroll by pixel (vertical)
         js.executeScript("window.scrollBy(0,500)");
         driver.findElement(By.id("submit")).click();
+
+        //untuk refresh, back, forward
+        driver.navigate().refresh();
+
+        String resultName = driver.findElement(By.xpath("//p[@id='name']")).getText();
+        Assert.assertTrue(resultName.contains("juaracoding"));
+
+
+
+
+
+
     }
 
     @Test
@@ -51,5 +64,13 @@ public class AppTest {
     @AfterMethod
     public void tearDown(){
         driver.quit();
+    }
+
+    static void delay (int seconds){
+        try {
+            Thread.sleep(seconds*1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
